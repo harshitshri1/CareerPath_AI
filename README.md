@@ -193,3 +193,6 @@ Built for hackathon demonstration purposes.
 
 **Built with ❤️ for Smart India Hackathon**
 # CareerPath_AI
+
+## Deployment
+This project is configured to deploy automatically on Vercel when pushed to the main branch.
