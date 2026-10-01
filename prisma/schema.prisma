@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id              String   @id @default(cuid())
+  name            String
+  email           String   @unique
+  college         String?
+  degree          String?
+  year            String?
+  cgpa            String?
+  targetRole      String?
+  resumeText      String?
+  readinessScore  Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  skills          Skill[]
+  projects        Project[]
+  certifications  Certification[]
+  experiences     Experience[]
+  interviewSessions InterviewSession[]
+}
+
+model Skill {
+  id        String  @id @default(cuid())
+  name      String
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, name])
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  studentId   String
+  student     Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model Certification {
+  id        String  @id @default(cuid())
+  name      String
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model Experience {
+  id        String  @id @default(cuid())
+  title     String
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model InterviewSession {
+  id         String   @id @default(cuid())
+  role       String
+  type       String
+  difficulty String
+  score      Int?
+  feedback   String?
+  createdAt  DateTime @default(now())
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model CareerRecommendation {
+  id              String @id @default(cuid())
+  role            String
+  matchPercentage Int
+  description     String
+  requiredSkills  String // JSON array stored as string
+  salaryRange     String
+  growthOutlook   String
+  studentEmail    String
+  createdAt       DateTime @default(now())
+}
+
+model SkillGapAnalysis {
+  id             String @id @default(cuid())
+  overallScore   Int
+  breakdown      String // JSON object stored as string
+  existingSkills String // JSON array stored as string
+  missingSkills  String // JSON array stored as string
+  actionPlan     String // JSON array stored as string
+  studentEmail   String
+  targetRole     String
+  createdAt      DateTime @default(now())
+}
